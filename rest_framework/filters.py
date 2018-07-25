@@ -110,12 +110,7 @@ class SearchFilter(BaseFilterBackend):
             conditions.append(reduce(operator.or_, queries))
         queryset = queryset.filter(reduce(operator.and_, conditions))
 
-        if self.must_call_distinct(queryset, search_fields):
-            # Filtering against a many-to-many field requires us to
-            # call queryset.distinct() in order to avoid duplicate items
-            # in the resulting queryset.
-            # We try to avoid this if possible, for performance reasons.
-            queryset = distinct(queryset, base)
+        queryset = distinct(queryset, base)
         return queryset
 
     def to_html(self, request, queryset, view):
